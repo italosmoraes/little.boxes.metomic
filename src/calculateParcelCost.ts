@@ -1,7 +1,7 @@
 import { Parcel } from './Parcel'
-import { ParcelCostTable } from './ParcelCostTable'
+import { ParcelCostItem, ParcelCostTable } from './ParcelCostTable'
 
-export const calculateParcelCost = (parcel: Parcel) => {
+export const getParcelCostItem = (parcel: Parcel): ParcelCostItem => {
   for (const [key, value] of Object.entries(parcel)) {
     console.log(key, value)
     for (const costItem of ParcelCostTable) {
@@ -9,7 +9,7 @@ export const calculateParcelCost = (parcel: Parcel) => {
       if (value > costItem.maxDimension) {
         continue
       }
-      return costItem.cost
+      return costItem
     }
   }
 
