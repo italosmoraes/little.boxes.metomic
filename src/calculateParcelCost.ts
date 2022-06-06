@@ -9,12 +9,9 @@ export const getParcelCostItem = (parcel: Parcel): ParcelCostItem => {
     }
 
     for (const costItem of ParcelCostTable) {
-      console.log('value', value, costItem.maxDimension)
       if (value > costItem.maxDimension) {
-        console.log('continue')
         continue
       }
-      console.log('changeCurrent', costItem)
 
       // compare current item with new one, and keep greater cost
       currentCostItem =
@@ -31,7 +28,7 @@ export const getParcelCostItem = (parcel: Parcel): ParcelCostItem => {
       break
     }
   }
-  console.log('returning', currentCostItem)
+
   if (!currentCostItem) {
     throw new Error(`Unable to find cost for parcel ${parcel}`)
   }
