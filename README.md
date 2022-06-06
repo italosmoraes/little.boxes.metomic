@@ -16,18 +16,23 @@ This project was built using:
 1. Install npm
 2. Install npx
 
-On the command line:
 ```
 # compile typescript
 npx tsc
 ```
 
+```
+# adjust node version
 nvm use
+```
 
+```
 yarn
+```
 
+```
 yarn test
-
+```
 
 ### Potential improvements
 --------------------------
@@ -38,6 +43,7 @@ yarn test
 - the `heavy parcel` included as part of the cost table makes the whole design of how the software calculates price a big mess. We are first working of parcel categorization based on dimensions, and then comes an adition of a constraint based on weight, which has to co-exist with all the other items. Also, in the real world there would need to be a more detailed explanation as to how to related weight and dimension. as I can have a small parcel, with a > 50kg weight, and at the moment one does not know what constraint to prioritize when pricing it.
 - `parcelCostResolver` needs proper formatting of text
 - add more combinations on the tests
+- clean up comments, imports, etc
 
 ### Notes on the task
 --------------------------
