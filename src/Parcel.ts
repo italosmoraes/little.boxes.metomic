@@ -2,8 +2,10 @@
  * Parcel representation for lengthxwidthxheight
  */
 export interface Parcel {
-  length: number
-  width: number
-  height: number
+  dimension: {
+    length: number
+    width: number
+    height: number
+  }
   weight: number
 }

@@ -9,6 +9,7 @@ import { ParcelCostNote, ParcelCostNoteItem } from './ParcelCostNote'
 import { ParcelCostItem } from './ParcelCostTable'
 
 const OVERWEIGHT_CHARGE_PER_KILO = 2
+const OVERWEIGHT_CHARGE_HEAVY = 1
 
 export const resolveParcelOrderCost = (order: ParcelOrder): ParcelCostNote => {
   const costItems: ParcelCostItem[] = order.parcels.map((parcel) => getParcelCostItem(parcel))
@@ -35,7 +36,10 @@ export const resolveParcelOrderCost = (order: ParcelOrder): ParcelCostNote => {
       // Here we consider a charge only per extra kg of weight:
       const overweight = parcel.weight - costItems[idx].weightLimit
 
-      const charge = overweight * OVERWEIGHT_CHARGE_PER_KILO
+      const charge =
+        parcel.weight > 10
+          ? overweight * OVERWEIGHT_CHARGE_HEAVY
+          : overweight * OVERWEIGHT_CHARGE_PER_KILO
 
       parcelsCostPerItemSummary[idx].cost = parcelsCostPerItemSummary[idx].cost + charge
       parcelsCostPerItemSummary[idx].overweightCharge = charge
