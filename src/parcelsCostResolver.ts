@@ -1,12 +1,8 @@
-// entry point for a list of parcels in a given format
-// call the calculator for each
-// and returns a given cost
-
 import { getParcelCostItem } from './calculateParcelCost'
 import { Order as ParcelOrder } from './Order'
 import { Parcel } from './Parcel'
 import { ParcelCostNote, ParcelCostNoteItem } from './ParcelCostNote'
-import { ParcelCostItem } from './ParcelCostTable'
+import { ParcelCostItem, SIZE } from './ParcelCostTable'
 
 const OVERWEIGHT_CHARGE_PER_KILO = 2
 const OVERWEIGHT_CHARGE_HEAVY = 1
@@ -18,15 +14,43 @@ export const resolveParcelOrderCost = (order: ParcelOrder): ParcelCostNote => {
   let totalCost = 0
   costItems.forEach((item) => (totalCost += item.cost))
 
-  if (order.speedyShipping) {
-    totalCost *= 2
-  }
-
   const parcelsCostPerItemSummary: ParcelCostNoteItem[] = costItems.map((item) => ({
     size: item.sizeDenomination,
     cost: item.cost,
-    overweightCharge: 0
+    overweightCharge: 0,
+    discount: 0
   }))
+
+  // --- Resolve special discounts
+  // Assuming that "Discounts should not impact the price of individual parcels, i.e. their individual cost should remain the same as it was before" means:
+  // show the original price for the parcel, but apply discount from total
+  // Also assuming here, given the example from phase 5, that:
+  // the overweight charge should be applied after the discounts
+  let discountToApply = 0
+
+  const smallParcelCount = parcelsCostPerItemSummary.filter((i) => i.size === SIZE.SMALL).length
+  const mediumParcelCount = parcelsCostPerItemSummary.filter((i) => i.size === SIZE.MEDIUM).length
+  const totalParcelCount = parcelsCostPerItemSummary.length
+
+  if (smallParcelCount >= 4) {
+    discountToApply += parcelsCostPerItemSummary[3].cost
+  }
+
+  if (mediumParcelCount >= 3) {
+    discountToApply += parcelsCostPerItemSummary[2].cost
+  }
+
+  if (totalParcelCount >= 5) {
+    discountToApply += parcelsCostPerItemSummary[4].cost
+  }
+
+  totalCost -= discountToApply
+
+  // -- Resolve speedy delivery
+
+  if (order.speedyShipping) {
+    totalCost *= 2
+  }
 
   // --- Resolve weight limit
   order.parcels.map((parcel, idx) => {
@@ -37,7 +61,7 @@ export const resolveParcelOrderCost = (order: ParcelOrder): ParcelCostNote => {
       const overweight = parcel.weight - costItems[idx].weightLimit
 
       const charge =
-        parcel.weight > 10
+        parcel.weight > 10 // highest threshold before 50kg
           ? overweight * OVERWEIGHT_CHARGE_HEAVY
           : overweight * OVERWEIGHT_CHARGE_PER_KILO
 

@@ -9,6 +9,41 @@ describe('parcelCostResolver', () => {
     expect(result.total).toBe(6)
   })
 
+  it('returns correct price for 1cmx1cmx10cm', () => {
+    const result = resolveParcelOrderCost({
+      speedyShipping: false,
+      parcels: [{ dimension: { length: 1, width: 1, height: 10 }, weight: 2 }]
+    })
+
+    expect(result.total).toBe(8)
+  })
+
+  it('returns correct price for 1cmx1cmx10cm', () => {
+    const result = resolveParcelOrderCost({
+      speedyShipping: false,
+      parcels: [
+        { dimension: { length: 1, width: 1, height: 10 }, weight: 2 },
+        { dimension: { length: 1, width: 1, height: 10 }, weight: 2 }
+      ]
+    })
+
+    expect(result.total).toBe(16)
+  })
+
+  it('returns correct discount for 4 medium packages', () => {
+    const result = resolveParcelOrderCost({
+      speedyShipping: false,
+      parcels: [
+        { dimension: { length: 1, width: 1, height: 10 }, weight: 2 },
+        { dimension: { length: 1, width: 1, height: 10 }, weight: 2 },
+        { dimension: { length: 1, width: 1, height: 10 }, weight: 2 },
+        { dimension: { length: 1, width: 1, height: 10 }, weight: 2 }
+      ]
+    })
+
+    expect(result.total).toBe(24) // and not 32
+  })
+
   it('add overweight charge correctly', () => {
     const result = resolveParcelOrderCost({
       speedyShipping: false,

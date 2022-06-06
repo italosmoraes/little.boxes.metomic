@@ -4,8 +4,12 @@ import { ParcelCostItem, ParcelCostTable } from './ParcelCostTable'
 export const getParcelCostItem = (parcel: Parcel): ParcelCostItem => {
   let currentCostItem
   for (const [key, value] of Object.entries(parcel.dimension)) {
-    // 10, 10, 50
+    if (currentCostItem && currentCostItem.maxDimension > value) {
+      continue
+    }
+
     for (const costItem of ParcelCostTable) {
+      console.log('value', value, costItem.maxDimension)
       if (value > costItem.maxDimension) {
         console.log('continue')
         continue
@@ -18,10 +22,16 @@ export const getParcelCostItem = (parcel: Parcel): ParcelCostItem => {
         !currentCostItem
           ? costItem
           : currentCostItem
+
+      // accounts for heavy parcels
+      if (parcel.weight > 10) {
+        continue
+      }
+
       break
     }
   }
-
+  console.log('returning', currentCostItem)
   if (!currentCostItem) {
     throw new Error(`Unable to find cost for parcel ${parcel}`)
   }

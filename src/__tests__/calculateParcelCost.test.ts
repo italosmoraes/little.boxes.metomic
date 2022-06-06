@@ -19,7 +19,7 @@ describe('calculateParcelCost', () => {
     expect(result.total).toBe(3)
   })
 
-  it.only('returns correct price for 10cmx1cmx1cm package', () => {
+  it('returns correct price for 10cmx1cmx1cm package', () => {
     const result = resolveParcelOrderCost({
       speedyShipping: false,
       parcels: [{ dimension: { length: 10, width: 1, height: 1 }, weight: 1 }]
@@ -30,7 +30,7 @@ describe('calculateParcelCost', () => {
   it('returns correct price for 10cmx50cmx1cm package', () => {
     const result = resolveParcelOrderCost({
       speedyShipping: false,
-      parcels: [{ dimension: { length: 10, width: 1, height: 1 }, weight: 1 }]
+      parcels: [{ dimension: { length: 10, width: 50, height: 1 }, weight: 1 }]
     })
     expect(result.total).toBe(15)
   })
